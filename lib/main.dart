@@ -38,8 +38,8 @@ class _MyHomePageState extends State<MyHomePage> {
   final ScrollController scrollController = ScrollController();
   int selectedSliverIndex = 0;
   int sliversAmount = 10;
-  // int itemPerSliver = 15; // Not jumping correctly
-  int itemPerSliver = 50; // jumping correctly
+  int itemPerSliver = 10; // Not filling the screen
+  // int itemPerSliver = 50; // Filling the screen
   late List<ListController> listControllers;
   late List<List<int>> sliversData;
 
@@ -78,8 +78,6 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
       body: CustomScrollView(
@@ -111,6 +109,9 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: () => _goToFirstSliver(),
               child: const Text('Go to first')),
           TextButton(
+              onPressed: () => _goToPreviousSliver(),
+              child: const Text('Go to previous')),
+          TextButton(
               onPressed: () => _goToNextSliver(),
               child: const Text('Go to next')),
         ],
@@ -130,6 +131,21 @@ class _MyHomePageState extends State<MyHomePage> {
       );
     } catch (e) {
       log('Jumping to 0 error: $e');
+    }
+  }
+
+  _goToPreviousSliver() {
+    setState(() {
+      selectedSliverIndex--;
+    });
+    try {
+      listControllers[selectedSliverIndex].jumpToItem(
+        index: 0,
+        scrollController: scrollController,
+        alignment: 0,
+      );
+    } catch (e) {
+      log('Jumping to $selectedSliverIndex error: $e');
     }
   }
 
